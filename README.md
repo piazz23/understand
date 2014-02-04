@@ -1,4 +1,4 @@
 Understand
 ==========
 
-Gem to monititoring Rails process
+Gem to monitoring Rails process

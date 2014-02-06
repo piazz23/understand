@@ -6,7 +6,7 @@ require 'understand/version'
 Gem::Specification.new do |spec|
   spec.name          = "understand"
   spec.version       = Understand::VERSION
-  spec.authors       = ["piazz32"]
+  spec.authors       = ["piazz23"]
   spec.email         = ["salvatorepiazzolla3@gmail.com"]
   spec.description   = %q{Gem to monitoring and save the the application stats}
   spec.summary       = %q{I don't know what is the summary}

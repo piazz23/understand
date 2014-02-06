@@ -11,6 +11,9 @@ module Writer
     	response 	= self.write_log(log_string)
 	
     	unless response
+    		if File.directory?(Rails.root + Base::LOG_FILE_PATH) && File.directory?(Rails.root + Base::LOG_FILE_PATH + "processes_log/")
+    			raise '\n\n--The understand log directory already excist--\n\n'
+    		end 
     		if File.directory?(Rails.root + Base::LOG_FILE_PATH) == false
     			`mkdir #{Rails.root + Base::LOG_FILE_PATH}`
     		end

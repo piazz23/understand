@@ -1,42 +1,48 @@
-require_relative '../base'
+module Understand
+    module Writer
+        def self.save_process(params)
+            log_string  = [Process.pid.to_s,
+                          DateTime.now.strftime('%Y-%m-%d %H:%M:%S'),
+                          params[:controller],
+                          params[:action],
+                          "#{params.to_s}"].join(Understand.config.fields_separetor)
 
-module Writer
-    def self.save_process(params)
-        log_string  = [Process.pid.to_s,
-                      DateTime.now.strftime('%Y-%m-%d %H:%M:%S'),
-                      params[:controller],
-                      params[:action],
-                      "#{params.to_s}"].join(Base::FIELDS_SEPARTOR)
+            response    = self.write_log(log_string)
+        
+            Rails.logger.info "\n\n-- Foulder not found --\n\n" unless response
 
-        response    = self.write_log(log_string)
-    
-        Rails.logger.info "\n\n-- Foulder not found --\n\n" unless response
-        unless response
-            if File.directory?(Rails.root + Base::LOG_FILE_PATH) == false
-                `mkdir #{Rails.root + Base::LOG_FILE_PATH}`
-                Rails.logger.info "\n\n-- mkdir #{Rails.root + Base::LOG_FILE_PATH} --\n\n"
+            unless response
+                # if File.directory?(Rails.root + Base::LOG_FILE_PATH) == false
+                if File.directory?(Understand.config.log_file_path) == false
+                    `mkdir #{Understand.config.log_file_path}`
+                    Rails.logger.info "\n\n-- mkdir #{Understand.config.log_file_path} --\n\n"
+                end
+
+                # if File.directory?(Rails.root + Base::LOG_FILE_PATH + "processes_log/") == false
+                if File.directory?(Understand.config.processes_logs_path) == false
+                    `mkdir #{Understand.config.processes_logs_path}`
+                    Rails.logger.info "\n\n-- mkdir #{Understand.config.processes_logs_path} --\n\n"
+                end
+
+                # if File.directory?(Rails.root + Base::LOG_FILE_PATH) && File.directory?(Rails.root + Base::LOG_FILE_PATH + "processes_log/")
+                if File.directory?(Understand.config.log_file_path) && File.directory?(Understand.config.processes_logs_path)
+                    raise "-- The understand log directory already exist --"
+                end 
+
+                self.write_log(log_string, false)
             end
+        end
 
-            if File.directory?(Rails.root + Base::LOG_FILE_PATH + "processes_log/") == false
-                `mkdir #{Rails.root + Base::LOG_FILE_PATH}processes_log/`
-                Rails.logger.info "\n\n-- mkdir #{Rails.root + Base::LOG_FILE_PATH}processes_log/ --\n\n"
+        private
+        def self.write_log(log_string, rescue_flag=true)
+            Rails.logger.info "\n\n-- write_log function called --\n\n"
+            if rescue_flag
+                File.open(Understand.config.processes_logs_path + "#{Process.pid}.tmp", 'a') { |f| f.write(log_string + "\n") } rescue false
+                # File.open(Rails.root + Understand.config.processes_logs_path + "#{Process.pid}.tmp", 'a') { |f| f.write(log_string + "\n") } rescue false
+            else
+                File.open(Understand.config.processes_logs_path + "#{Process.pid}.tmp", 'a') { |f| f.write(log_string + "\n") }
+                # File.open(Rails.root + Base::LOG_FILE_PATH + "processes_log/#{Process.pid}.tmp", 'a') { |f| f.write(log_string + "\n") }
             end
-
-            if File.directory?(Rails.root + Base::LOG_FILE_PATH) && File.directory?(Rails.root + Base::LOG_FILE_PATH + "processes_log/")
-                raise "\n\n-- The understand log directory already excist --\n\n"
-            end 
-
-            self.write_log(log_string, false)
-        end
-    end
-
-    private
-    def self.write_log(log_string, rescue_flag=true)
-        Rails.logger.info "\n\n-- write_log function called --\n\n"
-        if rescue_flag
-            File.open(Rails.root + Base::LOG_FILE_PATH + "processes_log/#{Process.pid}.tmp", 'a') { |f| f.write(log_string + "\n") } rescue false
-        else
-            File.open(Rails.root + Base::LOG_FILE_PATH + "processes_log/#{Process.pid}.tmp", 'a') { |f| f.write(log_string + "\n") }
-        end
+        end 
     end
 end

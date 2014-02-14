@@ -21,5 +21,8 @@ module Understand
 			end
 		end
 
+		def self.parse_tmp_files
+			
+		end
 	end
 end

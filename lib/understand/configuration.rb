@@ -1,22 +1,22 @@
 module Understand
 	class Configuration
-		attr_accessor 	:fields_separator, :log_file_foulder, :db_name
+		attr_accessor 	:fields_separator, :log_file_folder, :db_name
 
-		attr_reader 	:gem_path, :processes_logs_foulder, :log_file_pattern,
+		attr_reader 	:gem_path, :processes_logs_folder, :log_file_pattern,
 						:db_configuration, :db_location
 
 	  	def initialize(connection_flag=true)
 	  		@gem_path 				= File.dirname(__FILE__).gsub(/(\/[\w]+){2}$/, '')
-	  		@processes_logs_foulder = 'processes_log/'
+	  		@processes_logs_folder = 'processes_log/'
 	  		@db_name				= 'understand.db'
 
 	  		# [rw] 	fields_separator 	=> TOKEN THAT SPLIT THE LOG DATA IN THE LOG FILES
 	  		@fields_separator 		= ';'
 
-	  		# [rw]	log_file_foulder 	=> FOULDER WHERE THE LOG FILES WAS STORED
-	  		@log_file_foulder 		= 'understand/log/'
+	  		# [rw]	log_file_folder 	=> folder WHERE THE LOG FILES WAS STORED
+	  		@log_file_folder 		= 'understand/log/'
 
-	  		# [r]	db_location 		=> FOULDER WHERE THE GEM DATA BASE WAS STORED
+	  		# [r]	db_location 		=> folder WHERE THE GEM DATA BASE WAS STORED
 	  		@db_location 			= 'understand/data/'
 
 	  		# [r]	log_file_pattern 	=> DEFINE THE PATTER OF THE DATA IN THE LOG FILE 
@@ -38,11 +38,11 @@ module Understand
 	  	end
 
 	  	def log_file_path
-	  		@log_file_foulder
+	  		@log_file_folder
 	  	end
 
 	  	def processes_logs_path
-	  		log_file_path + @processes_logs_foulder
+	  		log_file_path + @processes_logs_folder
 	  	end
 
 	  	def db_path
@@ -50,7 +50,7 @@ module Understand
 	  	end
 
 	  	def [](method)
-	  		permitted_methods 	= [:fields_separator, :log_file_foulder, :gem_path, :log_file_path, :processes_logs_path]
+	  		permitted_methods 	= [:fields_separator, :log_file_folder, :gem_path, :log_file_path, :processes_logs_path]
 
 	  		method 				= method.to_sym unless method.kind_of?(Symbol)
 

@@ -1,10 +1,10 @@
-require_foulders = [
+require_folders = [
 	'understand', 'understand/reader', 'understand/writer',
 	'understand/models'
 ]
 
-require_foulders.each do |foulder|
-	Dir["#{File.dirname(__FILE__)}/#{foulder}/*.rb"].each do |file|
+require_folders.each do |folder|
+	Dir["#{File.dirname(__FILE__)}/#{folder}/*.rb"].each do |file|
 		require file if file != __FILE__
 	end
 end

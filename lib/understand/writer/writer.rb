@@ -15,7 +15,7 @@ module Understand
 
             response    = self.write_log(log_string)
         
-            # Rails.logger.info "\n\n-- Foulder not found --\n\n" unless response
+            # Rails.logger.info "\n\n-- folder not found --\n\n" unless response
 
             unless response
                 # if File.directory?(Rails.root + Base::LOG_FILE_PATH) == false

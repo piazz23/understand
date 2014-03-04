@@ -15,14 +15,37 @@ module Understand
 				query.each do |q|
 					db.execute q
 				end
-					
 			else
 				raise "DB file doesn't exist"
 			end
 		end
 
 		def self.parse_tmp_files
-			
+			# PARSE EACH TMP FILE
+			Dir["#{Understand.config.processes_logs_path}/*.tmp"].each do |file|
+				parse_file(file).each_line do |line|
+					data = line.split(Understand.config.fields_separator)
+
+					pid 		= data[Understand.config.log_file_pattern[:pid]]
+					action 		= data[Understand.config.log_file_pattern[:action]]
+					controller 	= data[Understand.config.log_file_pattern[:controller]]
+					start_at 	= data[Understand.config.log_file_pattern[:start_at]]
+					finish_at 	= data[Understand.config.log_file_pattern[:finish_at]]
+
+					Understand::Request.create(
+						:pid 		=> pid,
+						:action 	=> action,
+						:controller => controller,
+						:start_at 	=> start_at,
+						:finish_at 	=> finish_at
+					)
+				end
+			end
+		end
+
+		private
+		def self.parse_file(file_path)
+			File.open(file_path, 'r').read.gsub!(/\r\n?/, "\n")
 		end
 	end
 end

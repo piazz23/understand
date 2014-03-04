@@ -1,10 +1,17 @@
 require_foulders = [
 	'understand', 'understand/reader', 'understand/writer',
-	'understand/models'
+	'../app/models/understand/', '../app/controllers/understand',
+	'../app/views/understand', '../config', 
 ]
 
 require_foulders.each do |foulder|
 	Dir["#{File.dirname(__FILE__)}/#{foulder}/*.rb"].each do |file|
+		require file if file != __FILE__
+	end
+end
+
+require_foulders.each do |foulder|
+	Dir["#{File.dirname(__FILE__)}/#{foulder}/*.erb"].each do |file|
 		require file if file != __FILE__
 	end
 end

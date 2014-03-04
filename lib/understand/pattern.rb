@@ -38,6 +38,10 @@ module Understand
 			return response
 		end
 
+		def [](key)
+			@schema[key.to_sym]
+		end
+
 		private
 		def hash_to_array(hash)
 			array = []

@@ -23,7 +23,10 @@ module Understand
 		def self.parse_tmp_files
 			# PARSE EACH TMP FILE
 			Dir["#{Understand.config.processes_logs_path}/*.tmp"].each do |file|
-				parse_file(file).each_line do |line|
+				incomplete_lines = []
+
+				File.open(file, 'r').each_line do |line|
+					line = line.gsub("\n", "")
 					data = line.split(Understand.config.fields_separator)
 
 					pid 		= data[Understand.config.log_file_pattern[:pid]]
@@ -35,17 +38,21 @@ module Understand
 					Understand::Request.create(
 						:pid 		=> pid,
 						:action 	=> action,
-						:controller => controller,
+						:controller 	=> controller,
 						:start_at 	=> start_at,
 						:finish_at 	=> finish_at
 					)
-				end
-			end
-		end
 
-		private
-		def self.parse_file(file_path)
-			File.open(file_path, 'r').read.gsub!(/\r\n?/, "\n")
+					incomplete_lines << line if finish_at == nil
+				end
+
+				if incomplete_lines.empty?
+					File.delete(file)
+				else
+					File.open(file, 'w') {|f| f.write(incomplete_lines.join("\n")) }
+				end
+
+			end
 		end
 	end
 end

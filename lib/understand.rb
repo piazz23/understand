@@ -1,7 +1,7 @@
+require "active_support/dependencies"
+
 require_foulders = [
-	'understand', 'understand/reader', 'understand/writer',
-	'../app/models/understand/', '../app/controllers/understand',
-	'../app/views/understand', '../config', 
+	'understand', '../app/models/understand/' 
 ]
 
 require_foulders.each do |foulder|
@@ -10,11 +10,6 @@ require_foulders.each do |foulder|
 	end
 end
 
-require_foulders.each do |foulder|
-	Dir["#{File.dirname(__FILE__)}/#{foulder}/*.erb"].each do |file|
-		require file if file != __FILE__
-	end
-end
 
 module Understand
 	private
@@ -32,6 +27,7 @@ module Understand
 
 		@configuration
 	end
+
+	# Require our engine
+	require "understand/engine"
 end
-
-

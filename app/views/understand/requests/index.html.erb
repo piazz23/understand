@@ -1,0 +1,32 @@
+<div align="center" style="margin: 0 auto; width: 1060px">
+	<table align="center" width="100%">
+		<thead>
+			<tr>
+				<td></td>
+				<td>PID</td>
+				<td>Action</td>
+				<td>Controller</td>
+				<td>Start at</td>
+				<td>Finish at</td>
+				<td>Time</td>
+			</tr>
+		</thead>
+
+		<tbody>
+			<% @requests.each_with_index do |request, index| %>
+				<tr>
+					<td width="5%"><%= request.id %></td>
+					<td width="5%"><%= request.pid %></td>
+					<td width="20%"><%= request.action %></td>
+					<td width="20%"><%= request.controller %></td>
+					<td width="20%"><%= request.start_at.strftime("%Y-%m-%d %H:%M:%S:%L") %></td>
+					<td width="20%"><%= (request.finish_at != nil) ? request.finish_at.strftime("%Y-%m-%d %H:%M:%S") : "- - -" %></td>
+					<td width="10%"><%= time_difference(request.start_at, request.finish_at) %></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+
+	<%= link_to 'Update requests', understand_parse_tmp_files_url %>
+	<%= link_to 'Delete all requests', understand_delete_all_requests_url, :method => :delete, :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) %>
+</div>	
